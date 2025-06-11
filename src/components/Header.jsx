@@ -11,17 +11,15 @@ const options = {
 };
 
 export default function Header({ setsData }) {
-  const [search, setSearch] = useState("Test");
+  const [search, setSearch] = useState("");
 
   const onSearch = (e) => {
     setSearch(e.target.value);
   }
 
-  const onClear = (e) => {
+  const onClear = () => {
     setSearch("");
     setsData([]);
-
-    setsData([])
   }
 
   const onSubmit = (e) => {
