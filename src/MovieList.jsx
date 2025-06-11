@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import MovieCard from "./MovieCard";
 
 
@@ -12,31 +12,36 @@ const options = {
 };
 
 
-export default function MovieList(search) {
-  const [data, setData] = useState([]);
+export default function MovieList({ search, data, setData }) {
 
-    if(search.search === false){
-      useEffect(() => {
-        const movies = async () => {
-          try {
-            const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${1}`, options);
-            const jsonData = await response.json();
-            console.log(jsonData);
-            setData(jsonData);
-          } catch (error) {
-            console.log("Here is error " + error);
-          }
-        };
-        movies();
-      }, [search]);
-  }
+  useEffect(() => {
+    const movies = async () => {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${1}`, options);
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.log("Here is error " + error);
+      }
+    };
+    if (!search || !search.results) {
+      movies();
+    }
+  }, [search, setData]);
+
 
 
   return (
     <div className="movie-container">
-      {data.results && data.results.map((movie) => {
-        return <MovieCard key={movie.id} movie={movie} />;
-      })}
+      {search.results && search.results.length > 0 ? (
+        search.results.map((movie) => {
+          return <MovieCard key={movie.id} movie={movie} />;
+        })
+      ) : (
+        data && data.results && data.results.map((movie) => {
+          return <MovieCard key={movie.id} movie={movie} />;
+        })
+      )}
     </div>
   );
 }

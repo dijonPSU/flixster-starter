@@ -1,17 +1,19 @@
 import MovieList from './MovieList'
 import Header from './Header'
 import './App.css'
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 
 
 
 const App = () => {
-  const [searchCheck, setSearchCheck] = useState(false);
+  const [Data, setData] = useState([]);
+  const [sData, setsData] = useState([]);
+
   return (
     <div className="App">
-      <Header />
-      <MovieList search={searchCheck}/>
+      <Header setsData={setsData} />
+      <MovieList search={sData} data={Data} setData={setData} />
     </div>
   )
 }
