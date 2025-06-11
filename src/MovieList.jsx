@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import MovieCard from "./MovieCard";
 
+
 const options = {
   method: 'GET',
   headers: {
@@ -11,22 +12,25 @@ const options = {
 };
 
 
-export default function MovieList() {
+export default function MovieList(search) {
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    const movies = async () => {
-      try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${1}`, options);
-        const jsonData = await response.json();
-        console.log(jsonData);
-        setData(jsonData);
-      } catch (error) {
-        console.log("Here is error " + error);
-      }
-    };
-    movies();
-  }, []);
+    if(search.search === false){
+      useEffect(() => {
+        const movies = async () => {
+          try {
+            const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${1}`, options);
+            const jsonData = await response.json();
+            console.log(jsonData);
+            setData(jsonData);
+          } catch (error) {
+            console.log("Here is error " + error);
+          }
+        };
+        movies();
+      }, [search]);
+  }
+
 
   return (
     <div className="movie-container">
