@@ -12,10 +12,12 @@ const App = () => {
 
   return (
     <div className="App">
-      <Header setsData={setsData} />
+      <Header setsData={setsData} current={Data}/>
       <MovieList search={sData} data={Data} setData={setData} />
     </div>
   )
 }
+
+
 
 export default App

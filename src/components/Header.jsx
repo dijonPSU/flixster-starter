@@ -1,8 +1,6 @@
 import React from "react";
 import { useState } from "react";
 
-
-
 const options = {
   method: 'GET',
   headers: {
@@ -10,7 +8,7 @@ const options = {
   }
 };
 
-export default function Header({ setsData }) {
+export default function Header({ setsData, current }) {
   const [search, setSearch] = useState("");
 
   const onSearch = (e) => {
@@ -21,6 +19,25 @@ export default function Header({ setsData }) {
     setSearch("");
     setsData([]);
   }
+
+  const sortData = (e) => {
+    e.preventDefault();
+    let sortedResults = [];
+    let sortCriteria = e.target.value;
+
+    if (sortCriteria === "A-Z") {
+      sortedResults = [...current.results].sort((a, b) => a.original_title.localeCompare(b.original_title));
+    } else if (sortCriteria === "Release Date") {
+      sortedResults = [...current.results].sort((a, b) => a.release_date.localeCompare(b.release_date));
+    } else if (sortCriteria === "Vote average") {
+      sortedResults = [...current.results].sort((a, b) => b.vote_average - a.vote_average);
+    } else {
+      sortedResults = current.results;
+      sortCriteria = null;
+    }
+    setsData({ ...current, results: sortedResults, sortCriteria: sortCriteria });
+  };
+
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -45,6 +62,14 @@ export default function Header({ setsData }) {
           <input onChange={onSearch} value={search} className="header-searchbar" placeholder="Enter Movie Title here" type="Enter here" />
           <button onClick={onSubmit} className="header-searchbutton">Submit</button>
           <button onClick={onClear} className="header-clearbutton">Clear</button>
+        </div>
+        <div className="sort">
+          <select onChange={sortData} style={{ width: 200 }}>
+            <option selected disabled>Sort By</option>
+            <option>A-Z</option>
+            <option>Release Date</option>
+            <option>Vote average</option>
+          </select>
         </div>
       </header>
 

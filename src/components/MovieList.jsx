@@ -42,10 +42,36 @@ export default function MovieList({ search, data, setData }) {
     }
   }, [search, setData]);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = async () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    fetchMovies(nextPage);
+
+    setLoading(true);
+    try {
+      const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${nextPage}`, options);
+      const jsonData = await response.json();
+
+      const updatedData = {...data, results: [...(data.results || []), ...jsonData.results]};
+      setData(updatedData);
+
+      if (search && search.sortCriteria) {
+        let allSortedResults = [...updatedData.results];
+
+        if (search.sortCriteria === "A-Z") {
+          allSortedResults.sort((a, b) => a.original_title.localeCompare(b.original_title));
+        } else if (search.sortCriteria === "Release Date") {
+          allSortedResults.sort((a, b) => a.release_date.localeCompare(b.release_date));
+        } else if (search.sortCriteria === "Vote average") {
+          allSortedResults.sort((a, b) => b.vote_average - a.vote_average);
+        }
+
+        search.results = allSortedResults;
+      }
+    } catch (error) {
+      console.log("Error is here: " + error);
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -64,7 +90,7 @@ export default function MovieList({ search, data, setData }) {
         )}
       </div>
 
-      {!search.results && data && data.results && (
+      {data && data.results && (
         <div className="load-more-container">
           <button
             onClick={handleLoadMore}
