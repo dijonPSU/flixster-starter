@@ -1,6 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MDYyZDQ0MzdiYTRkMmM1ZGU5Y2Y0MTMxNjEyY2YxNiIsIm5iZiI6MTc0OTUxMTAyMi4yNTcsInN1YiI6IjY4NDc2YjZlM2EyN2NjMmEwODMwMWM3NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.O9HwBRgheJd1PIbcn8DZwm-UimnGTta7-BlnOUIlzxs'
+    }
+};
 
 export default function Modal({ movie, onClose }) {
+    const [genres, setGenres] = useState([]);
+    const [runtime, setRuntime] = useState(0);
+
+
+    const getGenre = async () => {
+        try {
+            const response = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}?language=en-US`, options);
+            const data = await response.json();
+            const runtime = data.runtime / 60;
+            setRuntime(runtime.toFixed(2));
+            setGenres(data.genres || []);
+        } catch (error) {
+            console.error("Error fetching genres: ", error);
+        }
+    };
+
+    useEffect(() => {
+        getGenre();
+    }, [movie.id]);
+
     return (
         <div className="modal-overlay active">
             <div className="modal-content">
@@ -21,9 +49,9 @@ export default function Modal({ movie, onClose }) {
                         )}
                         <div className="movie-stats">
                             <p><strong>Release Date:</strong> {movie.release_date}</p>
-                            <p><strong>Rating:</strong> {movie.vote_average} / 10</p>
-                            {movie.vote_count && <p><strong>Vote Count:</strong> {movie.vote_count}</p>}
-                            {movie.popularity && <p><strong>Popularity:</strong> {movie.popularity}</p>}
+                            <p><strong>Runtime:</strong> {runtime > 0 ? runtime : "N/A"}</p>
+                            <p><strong>Genre:</strong> {genres.length > 0 ? genres.map(genre => genre.name).join(', ') : 'N/A'}</p>
+                            <p><strong>Rating:</strong> {movie.vote_average}</p>
                         </div>
                     </div>
                 </div>

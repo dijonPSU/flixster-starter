@@ -27,6 +27,7 @@ export default function MovieList({ search, data, setData }) {
         setData(prevData => ({
           ...jsonData,
           results: [...(prevData.results || []), ...jsonData.results]
+
         }));
       }
     } catch (error) {
@@ -35,6 +36,7 @@ export default function MovieList({ search, data, setData }) {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (!search || !search.results) {
