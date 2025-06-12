@@ -1,8 +1,8 @@
 import MovieList from './MovieList'
 import Header from './Header'
+import Footer from './Footer';
 import './App.css'
 import { useState } from "react";
-
 
 
 
@@ -13,7 +13,10 @@ const App = () => {
   return (
     <div className="App">
       <Header setsData={setsData} current={Data}/>
-      <MovieList search={sData} data={Data} setData={setData} />
+      <div className="content">
+        <MovieList search={sData} data={Data} setData={setData} />
+      </div>
+      <Footer />
     </div>
   )
 }

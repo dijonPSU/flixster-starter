@@ -224,3 +224,11 @@
     flex-direction: column;
   }
 }
+
+
+.footer {
+  background-color: #282c34;
+  padding: 30px;
+  text-align: center;
+  display:fixed;
+}
