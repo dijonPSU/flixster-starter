@@ -11,7 +11,7 @@ const options = {
 };
 
 
-export default function MovieList({ search, data, setData }) {
+export default function MovieList({ search, data, setData, favorites, watchlist, toggleFavorite, toggleWatchlist }) {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -53,12 +53,11 @@ export default function MovieList({ search, data, setData }) {
       const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${nextPage}`, options);
       const jsonData = await response.json();
 
-      const updatedData = {...data, results: [...(data.results || []), ...jsonData.results]};
+      const updatedData = { ...data, results: [...(data.results || []), ...jsonData.results] };
       setData(updatedData);
 
       if (search && search.sortCriteria) {
         let allSortedResults = [...updatedData.results];
-
         if (search.sortCriteria === "A-Z") {
           allSortedResults.sort((a, b) => a.original_title.localeCompare(b.original_title));
         } else if (search.sortCriteria === "Release Date") {
@@ -83,11 +82,25 @@ export default function MovieList({ search, data, setData }) {
       <div className="movie-container">
         {search.results && search.results.length > 0 ? (
           search.results.map((movie) => {
-            return <MovieCard key={movie.id} movie={movie} />;
+            return <MovieCard
+              key={movie.id}
+              movie={movie}
+              isFavorite={favorites && favorites.some(favMovie => favMovie.id === movie.id)}
+              isInWatchlist={watchlist && watchlist.some(watchMovie => watchMovie.id === movie.id)}
+              toggleFavorite={toggleFavorite}
+              toggleWatchlist={toggleWatchlist}
+            />;
           })
         ) : (
           data && data.results && data.results.map((movie) => {
-            return <MovieCard key={movie.id} movie={movie} />;
+            return <MovieCard
+              key={movie.id}
+              movie={movie}
+              isFavorite={favorites && favorites.some(favMovie => favMovie.id === movie.id)}
+              isInWatchlist={watchlist && watchlist.some(watchMovie => watchMovie.id === movie.id)}
+              toggleFavorite={toggleFavorite}
+              toggleWatchlist={toggleWatchlist}
+            />;
           })
         )}
       </div>

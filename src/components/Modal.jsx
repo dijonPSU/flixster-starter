@@ -8,17 +8,18 @@ const options = {
     }
 };
 
-export default function Modal({ movie, onClose }) {
+export default function Modal({ movie, onClose, isFavorite, isInWatchlist, toggleFavorite, toggleWatchlist }) {
     const [genres, setGenres] = useState([]);
     const [runtime, setRuntime] = useState(0);
 
 
     const getGenre = async () => {
         try {
-            const response = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}?language=en-US`, options);
+            let genreUrl = `https://api.themoviedb.org/3/movie/${movie.id}?language=en-US`;
+            const response = await fetch(genreUrl, options);
             const data = await response.json();
-            const runtime = data.runtime / 60;
-            setRuntime(runtime.toFixed(2));
+            const runtime = data.runtime;
+            setRuntime(runtime);
             setGenres(data.genres || []);
         } catch (error) {
             console.error("Error fetching genres: ", error);
@@ -52,6 +53,21 @@ export default function Modal({ movie, onClose }) {
                             <p><strong>Runtime:</strong> {runtime > 0 ? runtime : "N/A"}</p>
                             <p><strong>Genre:</strong> {genres.length > 0 ? genres.map(genre => genre.name).join(', ') : 'N/A'}</p>
                             <p><strong>Rating:</strong> {movie.vote_average}</p>
+
+                            <div className="modal-buttons">
+                                <button
+                                    className={`button-f ${isFavorite ? 'active' : ''}`}
+                                    onClick={() => toggleFavorite(movie)}
+                                >
+                                    {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+                                </button>
+                                <button
+                                    className={`button-w ${isInWatchlist ? 'active' : ''}`}
+                                    onClick={() => toggleWatchlist(movie)}
+                                >
+                                    {isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
