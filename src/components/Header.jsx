@@ -72,7 +72,7 @@ export default function Header({ setsData, current }) {
       </div>
       <div className="sort">
         <select onChange={sortData}>
-          <option value="" disabled defaultValue>Sort By</option>
+          <option value="" selected disabled>Sort By</option>
           <option>A-Z</option>
           <option>Release Date</option>
           <option>Vote average</option>
