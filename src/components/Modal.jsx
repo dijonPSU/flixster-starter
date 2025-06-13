@@ -11,7 +11,9 @@ const options = {
 export default function Modal({ movie, onClose }) {
     const [genres, setGenres] = useState([]);
     const [runtime, setRuntime] = useState(0);
-
+    const [trailerURL, setTrailerURL] = useState("");
+    const [trailerLoading, setTrailerLoading] = useState(true);
+    const [trailerError, setTrailerError] = useState(false);
 
     const getGenre = async () => {
         try {
@@ -26,8 +28,36 @@ export default function Modal({ movie, onClose }) {
         }
     };
 
+    const getTrailer = async () => {
+        setTrailerLoading(true);
+        setTrailerError(false);
+        try {
+            let trailerUrl = `https://api.themoviedb.org/3/movie/${movie.id}/videos?language=en-US`;
+            const response = await fetch(trailerUrl, options);
+            const trailerData = await response.json();
+
+            const videos = trailerData.results || [];
+            const trailer = videos.find(video =>
+                video.site === "YouTube" &&
+                (video.type === "Trailer" || video.type === "Teaser")
+            );
+
+            if (trailer && trailer.key) {
+                setTrailerURL(`https://www.youtube.com/embed/${trailer.key}`);
+            } else {
+                setTrailerError(true);
+            }
+        } catch (error) {
+            console.error("Error getting trailer: ", error);
+            setTrailerError(true);
+        } finally {
+            setTrailerLoading(false);
+        }
+    }
+
     useEffect(() => {
         getGenre();
+        getTrailer();
     }, [movie.id]);
 
     return (
@@ -52,12 +82,30 @@ export default function Modal({ movie, onClose }) {
                                 <p>{movie.overview}</p>
                             </div>
                         )}
+
                         <div className="movie-stats">
                             <p><strong>Release Date:</strong> {movie.release_date}</p>
-                            <p><strong>Runtime:</strong> {runtime > 0 ? runtime : "N/A"}</p>
+                            <p><strong>Runtime:</strong> {runtime > 0 ? `${runtime} minutes` : "N/A"}</p>
                             <p><strong>Genre:</strong> {genres.length > 0 ? genres.map(genre => genre.name).join(', ') : 'N/A'}</p>
                             <p><strong>Rating:</strong> {movie.vote_average}</p>
+                        </div>
 
+                        <div className="movie-trailer">
+                            <h3>Trailer</h3>
+                            {trailerLoading ? (
+                                <p>Loading trailer...</p>
+                            ) : trailerError ? (
+                                <p>No trailer available for this movie.</p>
+                            ) : (
+                                <div className="trailer-container">
+                                    <iframe
+                                        src={trailerURL}
+                                        title={`${movie.original_title} Trailer`}
+                                        style={{ border: 'none' }}
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

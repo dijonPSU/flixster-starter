@@ -82,25 +82,11 @@ export default function MovieList({ search, data, setData, favorites, watchlist,
       <div className="movie-container">
         {search.results && search.results.length > 0 ? (
           search.results.map((movie) => {
-            return <MovieCard
-              key={movie.id}
-              movie={movie}
-              isFavorite={favorites && favorites.some(favMovie => favMovie.id === movie.id)}
-              isInWatchlist={watchlist && watchlist.some(watchMovie => watchMovie.id === movie.id)}
-              toggleFavorite={toggleFavorite}
-              toggleWatchlist={toggleWatchlist}
-            />;
+            return <MovieCard key={movie.id} movie={movie} isFavorite={favorites && favorites.some(favMovie => favMovie.id === movie.id)}isInWatchlist={watchlist && watchlist.some(watchMovie => watchMovie.id === movie.id)} toggleFavorite={toggleFavorite} toggleWatchlist={toggleWatchlist}/>;
           })
         ) : (
           data && data.results && data.results.map((movie) => {
-            return <MovieCard
-              key={movie.id}
-              movie={movie}
-              isFavorite={favorites && favorites.some(favMovie => favMovie.id === movie.id)}
-              isInWatchlist={watchlist && watchlist.some(watchMovie => watchMovie.id === movie.id)}
-              toggleFavorite={toggleFavorite}
-              toggleWatchlist={toggleWatchlist}
-            />;
+            return <MovieCard key={movie.id} movie={movie} isFavorite={favorites && favorites.some(favMovie => favMovie.id === movie.id)} isInWatchlist={watchlist && watchlist.some(watchMovie => watchMovie.id === movie.id)} toggleFavorite={toggleFavorite} toggleWatchlist={toggleWatchlist}/>;
           })
         )}
       </div>
