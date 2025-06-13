@@ -267,7 +267,8 @@
 }
 
 .close-button:hover {
-  color: #333;
+  color: rgb(215, 57, 57);
+  background-color: rgb(215, 57, 57);
 }
 
 .modal-body {
@@ -334,7 +335,7 @@
 
 .trailer-container {
   position: relative;
-  padding-bottom: 56.25%; 
+  padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   border-radius: 8px;

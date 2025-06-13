@@ -12,7 +12,7 @@ const App = () => {
   const [favorites, setFavorites] = useState([]);
   const [watchlist, setWatchlist] = useState([]);
 
-  
+
   const toggleFavorite = (movie) => {
     setFavorites(prevFavorites => {
       const isAlreadyFavorite = prevFavorites.some(favMovie => favMovie.id === movie.id);
@@ -46,7 +46,7 @@ const App = () => {
             {activePage === 'watched' && (
               <div>
                 <h2>Watched</h2>
-                <MovieList search={{ results: watchlist }} data={{ results: watchlist }} setData={setData} favorites={favorites} watchlist={watchlist} toggleFavorite={toggleFavorite} toggleWatchlist={toggleWatchlist} activePage={activePag} />
+                <MovieList search={{ results: watchlist }} data={{ results: watchlist }} setData={setData} favorites={favorites} watchlist={watchlist} toggleFavorite={toggleFavorite} toggleWatchlist={toggleWatchlist} activePage={activePage} />
               </div>
             )}
           </div>
