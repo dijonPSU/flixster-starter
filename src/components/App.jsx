@@ -1,84 +1,85 @@
-import MovieList from './MovieList'
-import Header from './Header'
+import React, { useState } from 'react';
+import Sidebar from './Sidebar';
+import MovieList from './MovieList';
+import Header from './Header';
 import Footer from './Footer';
-import './App.css'
-import { useState, useEffect } from "react";
-
-
+import './App.css';
 
 const App = () => {
+  const [activePage, setActivePage] = useState('home');
   const [Data, setData] = useState([]);
   const [sData, setsData] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [watchlist, setWatchlist] = useState([]);
 
-
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem('favorites');
-    const savedWatchlist = localStorage.getItem('watchlist');
-
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
-
-    if (savedWatchlist) {
-      setWatchlist(JSON.parse(savedWatchlist));
-    }
-  }, []);
-
-
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
-
-  useEffect(() => {
-    localStorage.setItem('watchlist', JSON.stringify(watchlist));
-  }, [watchlist]);
-
-
   const toggleFavorite = (movie) => {
     setFavorites(prevFavorites => {
       const isAlreadyFavorite = prevFavorites.some(favMovie => favMovie.id === movie.id);
-
-      if (isAlreadyFavorite) {
-        return prevFavorites.filter(favMovie => favMovie.id !== movie.id);
-      } else {
-        return [...prevFavorites, movie];
-      }
+      return isAlreadyFavorite ? prevFavorites.filter(favMovie => favMovie.id !== movie.id) : [...prevFavorites, movie];
     });
   };
 
   const toggleWatchlist = (movie) => {
     setWatchlist(prevWatchlist => {
       const isAlreadyInWatchlist = prevWatchlist.some(watchMovie => watchMovie.id === movie.id);
-
-      if (isAlreadyInWatchlist) {
-        return prevWatchlist.filter(watchMovie => watchMovie.id !== movie.id);
-      } else {
-        return [...prevWatchlist, movie];
-      }
+      return isAlreadyInWatchlist ? prevWatchlist.filter(watchMovie => watchMovie.id !== movie.id) : [...prevWatchlist, movie];
     });
   };
 
+
   return (
     <div className="App">
-      <Header setsData={setsData} current={Data} />
-      <div className="content">
-        <MovieList
-          search={sData}
-          data={Data}
-          setData={setData}
-          favorites={favorites}
-          watchlist={watchlist}
-          toggleFavorite={toggleFavorite}
-          toggleWatchlist={toggleWatchlist}
-        />
+      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      <div className="main-content">
+        {activePage === 'home' && <Header setsData={setsData} current={Data} />}
+        <div className="content">
+          {activePage === 'home' && (
+            <MovieList
+              search={sData}
+              data={Data}
+              setData={setData}
+              favorites={favorites}
+              watchlist={watchlist}
+              toggleFavorite={toggleFavorite}
+              toggleWatchlist={toggleWatchlist}
+              activePage={activePage}
+            />
+          )}
+          {activePage === 'favorites' && (
+            <div>
+              <h2>Favorites</h2>
+              <MovieList
+                search={{ results: favorites }}
+                data={{ results: favorites }}
+                setData={setData}
+                favorites={favorites}
+                watchlist={watchlist}
+                toggleFavorite={toggleFavorite}
+                toggleWatchlist={toggleWatchlist}
+                activePage={activePage}
+              />
+            </div>
+          )}
+          {activePage === 'watched' && (
+            <div>
+              <h2>Watched</h2>
+              <MovieList
+                search={{ results: watchlist }}
+                data={{ results: watchlist }}
+                setData={setData}
+                favorites={favorites}
+                watchlist={watchlist}
+                toggleFavorite={toggleFavorite}
+                toggleWatchlist={toggleWatchlist}
+                activePage={activePage}
+              />
+            </div>
+          )}
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
-  )
-}
+  );
+};
 
-
-
-export default App
+export default App;

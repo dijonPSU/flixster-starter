@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 const options = {
     method: 'GET',
     headers: {
-      accept: 'application/json',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MDYyZDQ0MzdiYTRkMmM1ZGU5Y2Y0MTMxNjEyY2YxNiIsIm5iZiI6MTc0OTUxMTAyMi4yNTcsInN1YiI6IjY4NDc2YjZlM2EyN2NjMmEwODMwMWM3NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.O9HwBRgheJd1PIbcn8DZwm-UimnGTta7-BlnOUIlzxs'
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MDYyZDQ0MzdiYTRkMmM1ZGU5Y2Y0MTMxNjEyY2YxNiIsIm5iZiI6MTc0OTUxMTAyMi4yNTcsInN1YiI6IjY4NDc2YjZlM2EyN2NjMmEwODMwMWM3NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.O9HwBRgheJd1PIbcn8DZwm-UimnGTta7-BlnOUIlzxs'
     }
 };
 
-export default function Modal({ movie, onClose, isFavorite, isInWatchlist, toggleFavorite, toggleWatchlist }) {
+export default function Modal({ movie, onClose }) {
     const [genres, setGenres] = useState([]);
     const [runtime, setRuntime] = useState(0);
 
@@ -39,13 +39,17 @@ export default function Modal({ movie, onClose, isFavorite, isInWatchlist, toggl
                 </div>
                 <div className="modal-body">
                     <div className="modal-image">
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} style={{ maxWidth: "200px", borderRadius: "8px", marginBottom: "15px" }}/>
+                        <img
+                            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                            alt={movie.title}
+                            className="modal-poster"
+                        />
                     </div>
                     <div className="modal-details">
                         {movie.overview && (
                             <div className="movie-overview">
-                            <h3>Overview</h3>
-                            <p>{movie.overview}</p>
+                                <h3>Overview</h3>
+                                <p>{movie.overview}</p>
                             </div>
                         )}
                         <div className="movie-stats">
@@ -54,20 +58,6 @@ export default function Modal({ movie, onClose, isFavorite, isInWatchlist, toggl
                             <p><strong>Genre:</strong> {genres.length > 0 ? genres.map(genre => genre.name).join(', ') : 'N/A'}</p>
                             <p><strong>Rating:</strong> {movie.vote_average}</p>
 
-                            <div className="modal-buttons">
-                                <button
-                                    className={`button-f ${isFavorite ? 'active' : ''}`}
-                                    onClick={() => toggleFavorite(movie)}
-                                >
-                                    {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-                                </button>
-                                <button
-                                    className={`button-w ${isInWatchlist ? 'active' : ''}`}
-                                    onClick={() => toggleWatchlist(movie)}
-                                >
-                                    {isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>

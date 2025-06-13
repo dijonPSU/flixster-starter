@@ -11,7 +11,7 @@ const options = {
 };
 
 
-export default function MovieList({ search, data, setData, favorites, watchlist, toggleFavorite, toggleWatchlist }) {
+export default function MovieList({ search, data, setData, favorites, watchlist, toggleFavorite, toggleWatchlist, activePage }) {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -105,14 +105,10 @@ export default function MovieList({ search, data, setData, favorites, watchlist,
         )}
       </div>
 
-      {data && data.results && (
+      {data && data.results && activePage === 'home' && (
         <div className="load-more-container">
-          <button
-            onClick={handleLoadMore}
-            className="load-more-button"
-            disabled={loading}
-          >
-            {loading ? "Loading..." : "Load More Movies"}
+          <button onClick={handleLoadMore} className="load-more-button" disabled={loading}>
+            {loading ? "Loading" : "Load More Movies"}
           </button>
         </div>
       )}

@@ -55,25 +55,29 @@ export default function Header({ setsData, current }) {
 
 
   return (
-    <div className="App-header">
-      <header>
+    <header className="App-header">
+      <div className="header-title">
         <h1>Flixster</h1>
-        <div className="search-bar">
-          <input onChange={onSearch} value={search} className="header-searchbar" placeholder="Enter Movie Title here" type="Enter here" />
-          <button onClick={onSubmit} className="header-searchbutton">Submit</button>
-          <button onClick={onClear} className="header-clearbutton">Clear</button>
-        </div>
-        <div className="sort">
-          <select onChange={sortData} style={{ width: 200 }}>
-            <option selected disabled>Sort By</option>
-            <option>A-Z</option>
-            <option>Release Date</option>
-            <option>Vote average</option>
-          </select>
-        </div>
-      </header>
-
-
-    </div>
+      </div>
+      <div className="search-bar">
+        <input
+          onChange={onSearch}
+          value={search}
+          className="header-searchbar"
+          placeholder="Enter Movie Title here"
+          type="text"
+        />
+        <button onClick={onSubmit} className="header-searchbutton">Submit</button>
+        <button onClick={onClear} className="header-clearbutton">Clear</button>
+      </div>
+      <div className="sort">
+        <select onChange={sortData}>
+          <option value="" disabled defaultValue>Sort By</option>
+          <option>A-Z</option>
+          <option>Release Date</option>
+          <option>Vote average</option>
+        </select>
+      </div>
+    </header>
   );
 }
